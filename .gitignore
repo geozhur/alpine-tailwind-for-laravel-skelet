@@ -1,0 +1,11 @@
+/node_modules
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+.idea
+/.idea/
+.vscode
+mix-manifest.json
+/public/css/
+/public/js/
