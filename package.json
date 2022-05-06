@@ -1,5 +1,5 @@
 {
-  "name": "Skelet-Front-Laravel",
+  "name": "skelet-front-laravel",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -15,7 +15,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.1",
+    "@tailwindcss/typography": "^0.5.2",
     "alpinejs": "^3.9.5",
+    "autoprefixer": "^10.0.2",
     "laravel-mix": "^6.0.43",
     "live-server": "^1.1.0",
     "postcss": "^8.4.12",

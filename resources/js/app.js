@@ -1,4 +1,6 @@
-import Alpine from 'alpinejs';
+import Alpine from "alpinejs";
+import dede from "./alpine-init.js";
 
-window.Alpine = Alpine;
+Alpine.data("dede", dede);
+
 Alpine.start();

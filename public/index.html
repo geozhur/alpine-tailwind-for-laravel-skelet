@@ -1,16 +1,361 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>'Alpine, Tailwind for Laravel</title>
-    <link href="css/app.css" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta name="csrf-token" content="" />
+    <meta name="csrf-param" content="_token" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>ANTICHAT</title>
+    <link href="css/app.css" rel="stylesheet" />
     <script src="js/app.js" defer></script>
-</head>
-<body>
-    <div class="flex justify-center items-center h-screen">
-            <h1 x-data="{ message: 'Alpine, Tailwind for Laravel' }" x-text="message" style="font-weight: 700; font-size: xx-large; text-amber-600"></h1>
+  </head>
+  <body class="bg-secondary" x-data="dede" @resize.window="handleResize()">
+    <div class="flex flex-col flex-1 w-full h-screen">
+      <header class="sticky top-0 z-50 py-2 shadow-md bg-secondary">
+        <div
+          class="flex items-center justify-between h-full px-6 mx-auto text-primary"
+        >
+          <div class="flex items-center">
+            <!-- Mobile hamburger -->
+            <button
+              class="p-1 mr-5 -ml-1 rounded-md focus:outline-none focus:shadow-outline-purple"
+              @click="toggleNavMenu"
+              aria-label="Menu"
+            >
+              <svg
+                class="w-6 h-6"
+                aria-hidden="true"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+            </button>
+            <ul class="flex items-center flex-shrink-0 space-x-6">
+              <li class="flex"></li>
+              <!-- Notifications menu -->
+              <li class="relative">
+                <button
+                  class="relative align-middle rounded-md focus:outline-none focus:shadow-outline-purple"
+                  @click.stop="toggleNotificationsMenu"
+                  @keydown.escape="closeNotificationsMenu"
+                  aria-label="Notifications"
+                  aria-haspopup="true"
+                >
+                  <svg
+                    class="w-5 h-5"
+                    aria-hidden="true"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"
+                    ></path>
+                  </svg>
+                  <!-- Notification badge -->
+                  <span
+                    aria-hidden="true"
+                    class="absolute top-0 right-0 inline-block w-3 h-3 transform translate-x-1 -translate-y-1 bg-red-600 border-2 border-white rounded-full"
+                  ></span>
+                </button>
+                <template x-if="isNotificationsMenuOpen">
+                  <ul
+                    x-transition:leave="transition ease-in duration-150"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0"
+                    @click.away="closeNotificationsMenu"
+                    @keydown.escape="closeNotificationsMenu"
+                    class="absolute left-0 z-20 mt-4 overflow-hidden rounded-md shadow-lg bg-bgmessage"
+                    style="width: 20rem"
+                  >
+                    <li
+                      class="flex items-center justify-center h-40 ml-3 place-content-center"
+                    >
+                      <a class="justify-center" href="#">
+                        <span
+                          >Ничего еще нет. Скоро все будет. Да прибудет с нами
+                          сила.</span
+                        >
+                      </a>
+                    </li>
+                  </ul>
+                </template>
+              </li>
+              <!-- Profile menu -->
+              <li class="relative">
+                <button
+                  class="align-middle rounded-full focus:shadow-outline-purple focus:outline-none"
+                  aria-label="Account"
+                  aria-haspopup="true"
+                >
+                  <img
+                    class="object-cover w-8 h-8 rounded-full"
+                    src="img/avatar.jpeg"
+                    alt=""
+                    aria-hidden="true"
+                  />
+                </button>
+                <template>
+                  <ul
+                    x-transition:leave="transition ease-in duration-150"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0"
+                    class="absolute right-0 w-56 p-2 mt-2 space-y-2 text-gray-600 bg-white border border-gray-100 rounded-md shadow-md dark:border-gray-700 dark:text-gray-300 dark:bg-gray-700"
+                    aria-label="submenu"
+                  >
+                    <li class="flex">
+                      <a
+                        class="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                        href="#"
+                      >
+                        <svg
+                          class="w-4 h-4 mr-3"
+                          aria-hidden="true"
+                          fill="none"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                          ></path>
+                        </svg>
+                        <span>Profile</span>
+                      </a>
+                    </li>
+                    <li class="flex">
+                      <a
+                        class="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                        href="#"
+                      >
+                        <svg
+                          class="w-4 h-4 mr-3"
+                          aria-hidden="true"
+                          fill="none"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                          ></path>
+                          <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Settings</span>
+                      </a>
+                    </li>
+                    <li class="flex">
+                      <a
+                        class="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                        href="#"
+                      >
+                        <svg
+                          class="w-4 h-4 mr-3"
+                          aria-hidden="true"
+                          fill="none"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                          ></path>
+                        </svg>
+                        <span>Log out</span>
+                      </a>
+                    </li>
+                  </ul>
+                </template>
+              </li>
+            </ul>
+          </div>
+          <a href="/"><div class="text-2xl">Блог GeoZhur.com</div></a>
+        </div>
+      </header>
+      <main class="flex-grow">
+        <template x-if="isNavMenuOpen">
+          <nav
+            class="fixed bottom-0 h-screen bg-repeat-y border-r-2 border-gray-300 w-52 bg-third top-11"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+          >
+            <ul class="mt-5">
+              <li>
+                <a
+                  class="flex items-center p-3 group hover:bg-secondary"
+                  href="https://forum.antichat.com"
+                >
+                  <div>
+                    <svg
+                      class="w-8 h-8"
+                      aria-hidden="true"
+                      fill="#ff2d20"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      viewBox="0 0 50 50"
+                    >
+                      <path
+                        d="m49.626 11.564a.809.809 0 0 1 .028.209v10.972a.8.8 0 0 1 -.402.694l-9.209 5.302v10.509c0 .286-.152.55-.4.694l-19.223 11.066c-.044.025-.092.041-.14.058-.018.006-.035.017-.054.022a.805.805 0 0 1 -.41 0c-.022-.006-.042-.018-.063-.026-.044-.016-.09-.03-.132-.054l-19.219-11.066a.801.801 0 0 1 -.402-.694v-32.916c0-.072.01-.142.028-.21.006-.023.02-.044.028-.067.015-.042.029-.085.051-.124.015-.026.037-.047.055-.071.023-.032.044-.065.071-.093.023-.023.053-.04.079-.06.029-.024.055-.05.088-.069h.001l9.61-5.533a.802.802 0 0 1 .8 0l9.61 5.533h.002c.032.02.059.045.088.068.026.02.055.038.078.06.028.029.048.062.072.094.017.024.04.045.054.071.023.04.036.082.052.124.008.023.022.044.028.068a.809.809 0 0 1 .028.209v20.559l8.008-4.611v-10.51c0-.07.01-.141.028-.208.007-.024.02-.045.028-.068.016-.042.03-.085.052-.124.015-.026.037-.047.054-.071.024-.032.044-.065.072-.093.023-.023.052-.04.078-.06.03-.024.056-.05.088-.069h.001l9.611-5.533a.801.801 0 0 1 .8 0l9.61 5.533c.034.02.06.045.09.068.025.02.054.038.077.06.028.029.048.062.072.094.018.024.04.045.054.071.023.039.036.082.052.124.009.023.022.044.028.068zm-1.574 10.718v-9.124l-3.363 1.936-4.646 2.675v9.124l8.01-4.611zm-9.61 16.505v-9.13l-4.57 2.61-13.05 7.448v9.216zm-36.84-31.068v31.068l17.618 10.143v-9.214l-9.204-5.209-.003-.002-.004-.002c-.031-.018-.057-.044-.086-.066-.025-.02-.054-.036-.076-.058l-.002-.003c-.026-.025-.044-.056-.066-.084-.02-.027-.044-.05-.06-.078l-.001-.003c-.018-.03-.029-.066-.042-.1-.013-.03-.03-.058-.038-.09v-.001c-.01-.038-.012-.078-.016-.117-.004-.03-.012-.06-.012-.09v-21.483l-4.645-2.676-3.363-1.934zm8.81-5.994-8.007 4.609 8.005 4.609 8.006-4.61-8.006-4.608zm4.164 28.764 4.645-2.674v-20.096l-3.363 1.936-4.646 2.675v20.096zm24.667-23.325-8.006 4.609 8.006 4.609 8.005-4.61zm-.801 10.605-4.646-2.675-3.363-1.936v9.124l4.645 2.674 3.364 1.937zm-18.422 20.561 11.743-6.704 5.87-3.35-8-4.606-9.211 5.303-8.395 4.833z"
+                      />
+                    </svg>
+                  </div>
+                  <div class="ml-3">
+                    <div class="text-sm font-semibold">LARAVEL</div>
+                    <div class="text-xs text-secondary2">фреймфорк</div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="flex items-center p-3 group hover:bg-secondary"
+                  href="https://www.youtube.com/antichat"
+                >
+                  <div>
+                    <svg
+                      class="w-8 h-8"
+                      width="256px"
+                      height="256px"
+                      viewBox="0 0 256 256"
+                    >
+                      <g>
+                        <path
+                          d="M0,0 L256,0 L256,256 L0,256 L0,0 Z"
+                          fill="#F7DF1E"
+                        ></path>
+                        <path
+                          d="M67.311746,213.932292 L86.902654,202.076241 C90.6821079,208.777346 94.1202286,214.447137 102.367086,214.447137 C110.272203,214.447137 115.256076,211.354819 115.256076,199.326883 L115.256076,117.528787 L139.313575,117.528787 L139.313575,199.666997 C139.313575,224.58433 124.707759,235.925943 103.3984,235.925943 C84.1532952,235.925943 72.9819429,225.958603 67.3113397,213.93026"
+                          fill="#000000"
+                        ></path>
+                        <path
+                          d="M152.380952,211.354413 L171.969422,200.0128 C177.125994,208.433981 183.827911,214.619835 195.684368,214.619835 C205.652521,214.619835 212.009041,209.635962 212.009041,202.762159 C212.009041,194.513676 205.479416,191.592025 194.481168,186.78207 L188.468419,184.202565 C171.111213,176.81473 159.597308,167.53534 159.597308,147.944838 C159.597308,129.901308 173.344508,116.153295 194.825752,116.153295 C210.119924,116.153295 221.117765,121.48094 229.021663,135.400432 L210.29059,147.428775 C206.166146,140.040127 201.699556,137.119289 194.826159,137.119289 C187.78047,137.119289 183.312254,141.587098 183.312254,147.428775 C183.312254,154.646349 187.78047,157.568406 198.089956,162.036622 L204.103924,164.614095 C224.553448,173.378641 236.067352,182.313448 236.067352,202.418387 C236.067352,224.071924 219.055137,235.927975 196.200432,235.927975 C173.860978,235.927975 159.425829,225.274311 152.381359,211.354413"
+                          fill="#000000"
+                        ></path>
+                      </g>
+                    </svg>
+                  </div>
+                  <div class="ml-3">
+                    <div class="text-sm font-semibold">JavaScript</div>
+                    <div class="text-xs text-secondary2">хрень полная</div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="flex items-center p-3 group hover:bg-secondary"
+                  href="https://t.me/antichat"
+                >
+                  <div>
+                    <svg
+                      class="w-8 h-8 bg-blue-300"
+                      width="2.53899in"
+                      height="1.26939in"
+                      version="1.1"
+                      viewBox="0 0 991 496"
+                    >
+                      <path
+                        d="M78 104l147 0c44,1 75,13 94,37 20,25 26,58 19,100 -2,19 -8,38 -17,57 -8,19 -20,35 -35,50 -18,19 -38,31 -58,36 -21,5 -43,8 -65,8l-66 0 -21 104 -76 0 78 -392 0 0zm65 62l-33 164c2,1 4,1 6,1l8 0c35,0 64,-3 88,-11 23,-7 39,-34 47,-79 6,-39 0,-61 -20,-66 -19,-6 -44,-9 -73,-9 -4,1 -8,1 -12,1 -4,0 -8,0 -12,0l1 -1z"
+                      />
+                      <path
+                        d="M425 0l76 0 -21 104 68 0c37,1 65,9 83,23 19,15 24,42 16,83l-36 182 -77 0 35 -174c4,-18 3,-31 -3,-38 -6,-8 -19,-12 -38,-12l-61 0 -45 224 -76 0 79 -392z"
+                      />
+                      <path
+                        d="M729 104l147 0c43,1 74,13 93,37 20,25 26,58 20,100 -3,19 -9,38 -17,57 -9,19 -20,35 -35,50 -19,19 -38,31 -59,36 -21,5 -43,8 -65,8l-66 0 -21 104 -76 0 79 -392 0 0zm64 62l-33 164c2,1 4,1 7,1l7 0c35,0 65,-3 88,-11 23,-7 39,-34 47,-79 7,-39 0,-61 -20,-66 -19,-6 -43,-9 -73,-9 -4,1 -8,1 -12,1 -4,0 -8,0 -12,0l1 -1 0 0zm0 0l0 0 0 0z"
+                      />
+                    </svg>
+                  </div>
+                  <div class="ml-3">
+                    <div class="text-sm font-semibold">PHP</div>
+                    <div class="text-xs text-secondary2">что то пишем</div>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </template>
+        <div class="container px-5 mx-auto max-w-7xl text-secondary2">
+          <div
+            class="mt-6 md:flex md:items-center md:justify-between md:space-x-8"
+            :class="{ 'md:ml-52': isNavMenuOpen }"
+          >
+            <div
+              class="flex items-center space-x-4 overflow-y-auto md:max-w-lg xl:max-w-5xl 2xl:max-w-7xl lg:max-w-3xl whitespace-nowrap"
+            >
+              <a
+                title="Antichat О нас"
+                href="/about"
+                class="px-3 py-1.5 text-gray-500 rounded-lg capitalize hover:bg-gray-100"
+                >О нас</a
+              >
+              <a
+                title="Antichat Правила"
+                href="/rules"
+                class="px-3 py-1.5 text-gray-500 rounded-lg capitalize hover:bg-gray-100"
+                >Правила</a
+              >
+              <a
+                title="Antichat Помощь"
+                href="/support"
+                class="px-3 py-1.5 text-gray-500 rounded-lg capitalize hover:bg-gray-100"
+                >Помощь</a
+              >
+              <a
+                title="Antichat Контакты"
+                href="/contacts"
+                class="px-3 py-1.5 font-medium text-gray-800 bg-secondary2 rounded-lg"
+                >Контакты</a
+              >
+            </div>
+          </div>
+
+          <div :class="{ 'md:ml-52': isNavMenuOpen }">
+            <h2 class="my-6 text-2xl font-semibold">О нас</h2>
+            <!-- Big section cards -->
+            <h4 class="mb-4 text-lg font-semibold">Немного информации.</h4>
+            <div
+              class="px-4 py-3 text-lg rounded-lg shadow-md bg-bgmessage"
+            ></div>
+          </div>
+        </div>
+      </main>
+      <footer
+        :class="{ 'md:ml-52': isNavMenuOpen }"
+        class="table-footer-group p-4 mt-24 bg-white shadow md:flex md:items-center md:justify-between md:p-6"
+      >
+        <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400"
+          >© 2022 All Rights Reserved.
+        </span>
+        <ul
+          class="flex flex-wrap items-center mt-3 text-sm text-gray-500 dark:text-gray-400 sm:mt-0"
+        >
+          <li>
+            <a href="#" class="mr-4 hover:underline md:mr-6">About</a>
+          </li>
+          <li>
+            <a href="#" class="mr-4 hover:underline md:mr-6">Privacy Policy</a>
+          </li>
+          <li>
+            <a href="#" class="mr-4 hover:underline md:mr-6">Licensing</a>
+          </li>
+          <li>
+            <a href="#" class="hover:underline">Contact</a>
+          </li>
+        </ul>
+      </footer>
     </div>
-</body>
+  </body>
 </html>
