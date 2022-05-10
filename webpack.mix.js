@@ -11,8 +11,10 @@ mix
   ]);
 
 mix.html({
-  htmlRoot: "./resources/index.html", // Your html root file(s)
+  htmlRoot: "./resources/*.html", // Your html root file(s)
   output: "", // The html output folder
+  partialRoot: "./resources/partials", // default partial path
+  layoutRoot: "./resources/layouts", // default partial path
   minify: {
     removeComments: true,
   },
